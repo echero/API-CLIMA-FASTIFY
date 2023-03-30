@@ -87,8 +87,7 @@ const getCurrentLocationIpApiOpts =   {
                 example: Example,
             }
         }
-    },
-    handler: getCurrentLocationIpApi,
+    }
 }
 
 //MAPEA EL SCHEMA DEL JSON QUE DEVOLVEMOS DE LA API OPEN WEATHER MAP
@@ -110,17 +109,18 @@ const getCurrentLocationCityOpts =   {
                 example: Example,
             }
         }   
-    },
-    handler: getCurrentLocationCity,
+    }
 }
 
 async function currentnRoutes (fastify, options, done) {
 
+    const {getCurrentLocationIpApi, getCurrentLocationCity} = require('../controllers/current.controller')(fastify)
+
     //TRAE LA INFO DEL CLIMA ACTUAL CON LA UBICACION DE LA IP
-    await fastify.get('/current', getCurrentLocationIpApiOpts) 
+    await fastify.get('/current', getCurrentLocationIpApiOpts, getCurrentLocationIpApi) 
 
     //TRAE LA INFO DEL CLIMA ACTUAL CON LA UBICACION PASADA POR PARAMS
-    await fastify.get('/current/:city', getCurrentLocationCityOpts)
+    await fastify.get('/current/:city', getCurrentLocationCityOpts, getCurrentLocationCity)
 
     done()
 

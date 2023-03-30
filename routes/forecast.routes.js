@@ -1,7 +1,3 @@
-// const fetch = require('cross-fetch')
-// const API_KEY = 'caa63e0e356fcbc235c450586473100d'
-const {getForecastIpApi, getForecastLocationCity} = require('../controllers/forecast.controller')
-
 //PROPERTIES SCHEMA
 const Properties = {
     list:{
@@ -70,8 +66,7 @@ const getforecastIpApiOpts =   {
                 required: Required,
             }
         }   
-    },
-    handler: getForecastIpApi      
+    }     
 }
 
 //MAPEA EL SCHEMA DEL JSON QUE DEVOLVEMOS DE LA API OPEN WEATHER MAP
@@ -92,17 +87,18 @@ const getforecastLocationCityOpts =   {
                 required: Required,
             }
         }   
-    },
-    handler: getForecastLocationCity
+    }
 }
 
 async function forecasteRoutes (fastify, options, done) {
 
+    const {getForecastIpApi, getForecastLocationCity} = require('../controllers/forecast.controller')(fastify)
+
     //TRAE LA INFO DEL CLIMA ACTUAL Y DE LOS 5 DIAS SIGUIENTE CON LA UBICACION DE LA IP
-    await fastify.get('/forecast', getforecastIpApiOpts)
+    await fastify.get('/forecast', getforecastIpApiOpts, getForecastIpApi)
 
     //TRAE LA INFO DEL CLIMA ACTUAL Y DE LOS 5 DIAS SIGUIENTE CON LA UBICACION POR PARAMS
-    await fastify.get('/forecast/:city', getforecastLocationCityOpts)
+    await fastify.get('/forecast/:city', getforecastLocationCityOpts, getForecastLocationCity)
 
     done()
 

@@ -33,7 +33,7 @@ const getLocationOpts =  {
 async function locationRoutes (fastify, options, done) {
 
     // TRAE LA UBICACION POR IP
-    await fastify.get('/location', getLocationOpts)
+    await fastify.get('/location/:ip?', getLocationOpts)
 
     done()
 

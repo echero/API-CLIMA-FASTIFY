@@ -1,28 +1,31 @@
 const fetch = require('cross-fetch')
-const API_KEY = 'caa63e0e356fcbc235c450586473100d'
 
-const getForecastIpApi = async (req, reply) => {
+module.exports = (fastify) => {
 
-    const responseGetLocation = await fetch(new URL('http://localhost:5000/location'))
-    const json = await responseGetLocation.json()
+    async function getForecastIpApi(req, reply) {
+        const ip = req.ip
+        // const responseGetLocation = await fetch(new URL('http://localhost:5000/location'))
+        const responseGetLocation = await fetch(`https://sideways-wave-forger.glitch.me/location/${ip}`)
+        const json = await responseGetLocation.json()
 
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${json.city},${json.countryCode}&lang=sp&appid=${API_KEY}&units=metric`)
-    
-    
-    return response.json()
-    
-}
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${json.city},${json.countryCode}&lang=sp&appid=${fastify.config.API_KEY_OPEN_WEATHER}&units=metric`)
 
-const getForecastLocationCity = async (req, reply) => {
-        
-    const city = req.params.city
 
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&lang=sp&appid=${API_KEY}&units=metric`)
-    
-    return response.json()
-}
+        return response.json()
+    }
 
-module.exports = {
-    getForecastIpApi,
-    getForecastLocationCity
+    async function getForecastLocationCity(req, reply) {
+
+        const city = req.params.city
+
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&lang=sp&appid=${fastify.config.API_KEY_OPEN_WEATHER}&units=metric`)
+
+        return response.json()
+    }
+
+    return {
+        getForecastIpApi,
+        getForecastLocationCity
+    }
+
 }
