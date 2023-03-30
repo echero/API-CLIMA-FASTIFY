@@ -1,4 +1,4 @@
-const fastify = require('fastify')({logger: true})
+const fastify = require('fastify')({logger: true, trustProxy: true})
 
 fastify.register(require('./utils/envs'))
 const {swagger} = require('./utils/swagger')
